@@ -10,5 +10,7 @@ package RPIS41.Kuzina.wdad.data.managers;
  * @author Эльвира
  */
 public class NewClass {
-    
+    public static void main(String[] args) {
+        
+    }
 }
