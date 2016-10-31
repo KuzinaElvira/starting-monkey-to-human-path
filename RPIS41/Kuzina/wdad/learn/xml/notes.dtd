@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!ELEMENT notes (note*)>
+<!ELEMENT note (title, text, owner, privileges, cdate?)>
+<!ELEMENT text (#PCDATA)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT owner EMPTY>
+<!ELEMENT privileges (ALL|(user+))>
+<!ELEMENT ALL EMPTY>
+<!ELEMENT user EMPTY>
+<!ELEMENT cdate (#PCDATA)>
+<!ATTLIST owner
+name CDATA #REQUIRED
+mail CDATA #REQUIRED>
+<!ATTLIST ALL
+rights (R|RW) "R">
+<!ATTLIST user
+name CDATA #IMPLIED
+mail CDATA #REQUIRED
+rights (R|RW) "R">
