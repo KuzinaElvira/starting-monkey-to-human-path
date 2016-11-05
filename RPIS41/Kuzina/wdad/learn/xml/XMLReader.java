@@ -23,8 +23,9 @@ public class XMLReader {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(file);
         ErrorChecker errCheck = new ErrorChecker();
+        builder.setErrorHandler(errCheck);
+        Document document = builder.parse(file);        
         if(errCheck.isError()) System.exit(1);
         return document;
     }
