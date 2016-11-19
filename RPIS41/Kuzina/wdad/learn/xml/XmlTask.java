@@ -46,7 +46,7 @@ public class XmlTask {
 
     private Node getTextNode(User owner, String title) {
         NodeList notes = document.getDocumentElement().getChildNodes();//получили список note-ов
-        if (notes.getLength() == 0) {
+        if (notes.getLength() == 1) {
             return null;
         }
         for (int i = 0; i < notes.getLength(); i++) {
@@ -84,9 +84,24 @@ public class XmlTask {
         textNode.getFirstChild().setTextContent(newText);
     }
 
+    private void setNewRights(NodeList usersAll, Node privileges, int userNum, NamedNodeMap userAttr, int newRights) {
+        switch (newRights) {
+            case RIGHT_R:
+                userAttr.getNamedItem("rights").getFirstChild().setNodeValue(RIGHT_READ);
+                break;
+            case RIGHT_RW:
+                userAttr.getNamedItem("rights").getFirstChild().setNodeValue(RIGHT_READ_WRITE);
+                break;
+            case RIGHT_NO: {
+                privileges.removeChild(usersAll.item(userNum));
+            }
+            break;
+        }
+    }
+            
     public void setPrivileges(User user, String title, int newRights) throws ParserConfigurationException, SAXException, IOException {
         NodeList notes = document.getDocumentElement().getChildNodes();//получили список note-ов
-        if (notes.getLength() == 0) {
+        if (notes.getLength() == 1) {
             return;
         }
         for (int i = 0; i < notes.getLength(); i++) {
@@ -98,29 +113,32 @@ public class XmlTask {
                 continue;
             }
             Node privileges = findNodeByName("privileges", note);
-            NodeList usersAll = privileges.getChildNodes();
+            NodeList usersAll = privileges.getChildNodes();//получает детей из privileges (либо кучу user-ов, либо ALL)
             for (int j = 0; j < usersAll.getLength(); j++) {
+                if (usersAll.item(j).getNodeType() == Node.TEXT_NODE) {
+                    continue;//убираем #text между user-ами
+                }
                 if (!usersAll.item(j).getNodeName().equals("ALL")) {
-                    NamedNodeMap userAttr = usersAll.item(j).getAttributes();
-                    if (userAttr.getNamedItem("name").getFirstChild().getNodeValue().equals(user.getName())
-                            && userAttr.getNamedItem("mail").getFirstChild().getNodeValue().equals(user.getMail())) {
-                        switch (newRights) {
-                            case RIGHT_R:
-                                userAttr.getNamedItem("rights").getFirstChild().setNodeValue(RIGHT_READ);
-                                break;
-                            case RIGHT_RW:
-                                userAttr.getNamedItem("rights").getFirstChild().setNodeValue(RIGHT_READ_WRITE);
-                                break;
-                            case RIGHT_NO: {
-                                privileges.removeChild(usersAll.item(j));
-                            }
-                            break;
+                    Node currentUser = usersAll.item(j);
+                    NamedNodeMap userAttr = currentUser.getAttributes();//получает список атрибутов у текущего юзера
+                    if(userAttr.getNamedItem("name") == null){
+                        if(user.getName() == null){
+                            setNewRights(usersAll, privileges, j, userAttr, newRights);
+                            return;
                         }
-                        return;
+                        break;
+                    }                        
+                    if(user.getName() == null || user.getName().equals(""))
+                        break;
+                    if ((user.getName().equals(userAttr.getNamedItem("name").getFirstChild().getNodeValue()))
+                            && (user.getMail().equals(userAttr.getNamedItem("mail").getFirstChild().getNodeValue()))) {
+                            setNewRights(usersAll, privileges, j, userAttr, newRights);
+                            return;
                     }
                 } else {
-                    privileges.removeChild(usersAll.item(j));
-                    break;
+                    if(usersAll.getLength() != 3)
+                        privileges.removeChild(usersAll.item(j));
+                    return;
                 }
             }
             Element userNode = document.createElement("user");

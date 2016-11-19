@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE notes SYSTEM "C:\notes.dtd">
+<!DOCTYPE notes SYSTEM "C:\Users\Elvira\Documents\NetBeansProjects\starting-monkey-to-human-path\src\RPIS41\Kuzina\wdad\learn\xml\notes.dtd">
 <notes>
-	<note>
-		<title> </title>
-		<text> </text>
-		<owner> </owner>
-		<privileges>
-				<ALL rights="RW"></ALL>
-				<user name="Olga" rights="RW"></user>
-		</privileges>
-		<cdate>09-09-2009</cdate>
-	</note>
-	<note>
-		<title> </title>
-		<text> </text>
-		<owner name="OlgaL" mail="olol@mail.ru"> </owner>	
-		<privileges>
-			<user name="Olga" rights="RW"></user>
-		</privileges>
-		<cdate>29-09-2009</cdate>
-	</note>
-	<note>
-		<title> </title>
-		<text> </text>
-		<owner name="Olga" mail=""> </owner>		
-		<privileges>
-			<user mail="olo@mail.ru" rights="RW"></user>
-			<user name="" mail="" rights="R"></user>
-		</privileges>
-	</note>
-	<note>
-		<title> </title>
-		<text> </text>
-		<owner name="" mail="oloo@mail.ru"> </owner>		
-		<privileges>
-			<ALL> rights="R"</ALL>
-		</privileges>
-	</note>
-	<note>
-		<title>NOTE3</title>
-		<text>Olgathebest_____</text>
-		<owner mail="" name="Olga"/>		
-		<privileges>
-			<user mail="olo@mail.ru" rights="RW"/>
-			<user mail="" name="" rights="R"/>
-		</privileges>
-	</note>
+    <note>
+        <title> </title>
+        <text> </text>
+        <owner> </owner>
+        <privileges>
+            <ALL rights="RW"></ALL>
+            <user name="Olga" rights="RW"></user>
+        </privileges>
+        <cdate>09-09-2009</cdate>
+    </note>
+    <note>
+        <title> </title>
+        <text> </text>
+        <owner name="OlgaL" mail="olol@mail.ru"> </owner>	
+        <privileges>
+            <user name="Olga" rights="RW"></user>
+        </privileges>
+        <cdate>29-09-2009</cdate>
+    </note>
+    <note>
+        <title> </title>
+        <text> </text>
+        <owner name="Olga" mail=""> </owner>		
+        <privileges>
+            <user mail="olo@mail.ru" rights="RW"></user>
+            <user name="" mail="" rights="R"></user>
+        </privileges>
+    </note>
+    <note>
+        <title> </title>
+        <text> </text>
+        <owner name="" mail="oloo@mail.ru"> </owner>		
+        <privileges>
+            <ALL> rights="R"</ALL>
+        </privileges>
+    </note>
+    <note>
+        <title>NOTE3</title>
+        <text>Olgathebest_____</text>
+        <owner mail="" name="Olga"/>		
+        <privileges>
+            <user mail="olo@mail.ru" rights="RW"/>
+            <user mail="" name="" rights="R"/>
+        </privileges>
+    </note>
 </notes>
