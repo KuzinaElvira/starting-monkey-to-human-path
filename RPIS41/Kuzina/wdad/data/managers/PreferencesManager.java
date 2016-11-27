@@ -43,6 +43,10 @@ public class PreferencesManager {
         }
         return instance;
     }
+    
+    private boolean nodeIsNull(Node node){
+        return node == null;
+    }
 
     private Node findNodeByName(String name, Node parentNode) {
         NodeList children = parentNode.getChildNodes();
@@ -93,7 +97,7 @@ public class PreferencesManager {
     public void setCreateregistry(boolean value) {
         Node registry = getServerChild(REGISTRY);
         Node createRegistry = findNodeByName(CREATE_REGISTRY, registry);
-        if (createRegistry == null) {//если тега нет, создать его
+        if (nodeIsNull(createRegistry)) {//если тега нет, создать его
             Element createRegistryNode = document.createElement(CREATE_REGISTRY);
             if (value) {
                 createRegistryNode.getFirstChild().setNodeValue("yes");
@@ -117,7 +121,7 @@ public class PreferencesManager {
     public void setRegistryAddress(String value) {
             Node registry = getServerChild(REGISTRY);
             Node registryAddress = findNodeByName(REGISTRY_ADDRESS, registry);
-            if (registryAddress == null) {//если тега нет, создать его
+            if (nodeIsNull(registryAddress)) {//если тега нет, создать его
                 Element registryAddressNode = document.createElement(REGISTRY_ADDRESS);
                 registryAddressNode.getFirstChild().setNodeValue(value);
                 registry.appendChild(registryAddressNode);
@@ -133,7 +137,7 @@ public class PreferencesManager {
     public void setRegistryport(String value) {
         Node registry = getServerChild(REGISTRY);
         Node registryPort = findNodeByName(REGISTRY_PORT, registry);
-        if (registryPort == null) {//если тега нет, создать его
+        if (nodeIsNull(registryPort)) {//если тега нет, создать его
             Element registryPortNode = document.createElement(REGISTRY_PORT);
             registryPortNode.getFirstChild().setNodeValue(value);
             registry.appendChild(registryPortNode);
@@ -166,7 +170,7 @@ public class PreferencesManager {
     public void setBindedObjectsClassAttr(String nameAttr, String valAttr) {
         Node server = getRmiChild(SERVER);
         Node bindedObject = getBindedObject(nameAttr);//нашли нужный тег биндед
-        if (bindedObject == null) {//если тега нет, создать его
+        if (nodeIsNull(bindedObject)) {//если тега нет, создать его
             Element bindedObjectNode = document.createElement(BINDED_OBJECT);
             bindedObjectNode.setAttribute(NAME_ATTRIBUTE, nameAttr);
             bindedObjectNode.setAttribute(CLASS_ATTRIBUTE, valAttr);
@@ -185,7 +189,7 @@ public class PreferencesManager {
     public void setPolicypath(String value) {
         Node client = getRmiChild(CLIENT);
         Node policyPath = findNodeByName(POLICY_PATH, client);
-        if (policyPath == null) {//если тега нет, создать его
+        if (nodeIsNull(policyPath)) {//если тега нет, создать его
             Element policyPathNode = document.createElement(POLICY_PATH);
             policyPathNode.getFirstChild().setNodeValue(value);
             client.appendChild(policyPathNode);
@@ -210,7 +214,7 @@ public class PreferencesManager {
     public void setUseCodeBaseOnly(boolean value) {
         Node client = getRmiChild(CLIENT);
         Node useCodeBaseOnly = findNodeByName(USE_CODE_BASE_ONLY, client);
-        if (useCodeBaseOnly == null) {//если тега нет, создать его
+        if (nodeIsNull(useCodeBaseOnly)) {//если тега нет, создать его
             Element useCodeBaseOnlyNode = document.createElement(USE_CODE_BASE_ONLY);
             if (value) {
                 useCodeBaseOnlyNode.getFirstChild().setNodeValue("yes");
@@ -235,7 +239,7 @@ public class PreferencesManager {
         Node appconf = document.getDocumentElement();
         Node rmi = appconf.getFirstChild();
         Node classProvider = findNodeByName(CLASS_PROVIDER, rmi);
-        if (classProvider == null) {//если тега нет, создать его
+        if (nodeIsNull(classProvider)) {//если тега нет, создать его
             Element classProviderNode = document.createElement(CLASS_PROVIDER);
             classProviderNode.getFirstChild().setNodeValue(value);
             rmi.appendChild(classProviderNode);
