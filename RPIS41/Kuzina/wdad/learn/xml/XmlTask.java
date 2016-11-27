@@ -66,10 +66,14 @@ public class XmlTask {
         }
         return null;
     }
+    
+    private boolean textNodeIsNull(Node textNode){
+        return textNode == null || textNode.getFirstChild() == null;
+    }
 
     public String getNoteText(User owner, String title) throws ParserConfigurationException, SAXException, IOException {
         Node textNode = getTextNode(owner, title);
-        if (textNode == null || textNode.getFirstChild() == null) {
+        if (textNodeIsNull(textNode)) {
             return null;
         } else {
             return textNode.getFirstChild().getNodeValue();
@@ -78,7 +82,7 @@ public class XmlTask {
 
     public void updateNote(User owner, String title, String newText) throws ParserConfigurationException, SAXException, IOException {
         Node textNode = getTextNode(owner, title);
-        if (textNode == null || textNode.getFirstChild() == null) {
+        if (textNodeIsNull(textNode)) {
             return;
         }
         textNode.getFirstChild().setTextContent(newText);

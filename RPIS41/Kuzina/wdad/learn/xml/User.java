@@ -4,10 +4,6 @@
  * and open the template in the editor.
  */
 package RPIS41.Kuzina.wdad.learn.xml;
-//
-//import org.w3c.dom.Document;
-//import org.w3c.dom.NamedNodeMap;
-//import org.w3c.dom.NodeList;
 
 /**
  *
