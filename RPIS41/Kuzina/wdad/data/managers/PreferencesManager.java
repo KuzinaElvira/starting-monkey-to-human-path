@@ -5,11 +5,16 @@
  */
 package RPIS41.Kuzina.wdad.data.managers;
 
+import RPIS41.Kuzina.wdad.learn.xml.XMLReader;
+import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -32,14 +37,16 @@ public class PreferencesManager {
     private final String USE_CODE_BASE_ONLY = "usecodebaseonly";
     private final String NAME_ATTRIBUTE = "name";
     private final String CLASS_ATTRIBUTE = "class";
+    
+    private static final String APPCONFIG_PATH = ".\\src\\RPIS41\\Kuzina\\wdad\\resources\\configuration\\appconfig.xml";
 
     private PreferencesManager(Document document) {
         this.document = document;
     }
 
-    public static synchronized PreferencesManager getInstance(Document document) {
+    public static synchronized PreferencesManager getInstance() throws ParserConfigurationException, SAXException, IOException {
         if (instance == null) {
-            instance = new PreferencesManager(document);
+            instance = new PreferencesManager(XMLReader.xmlReader(new File(APPCONFIG_PATH)));
         }
         return instance;
     }
@@ -49,13 +56,8 @@ public class PreferencesManager {
     }
 
     private Node findNodeByName(String name, Node parentNode) {
-        NodeList children = parentNode.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            if (children.item(i).getNodeName().equals(name)) {
-                return children.item(i);
-            }
-        }
-        return null;
+        Element parent = (Element) parentNode;
+        return parent.getElementsByTagName(name).item(0);
     }
 
     //ДЛЯ ПОИСКА ДЕТЕЙ ПО ИМЕНИ
