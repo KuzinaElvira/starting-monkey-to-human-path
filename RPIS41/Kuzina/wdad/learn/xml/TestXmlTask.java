@@ -18,21 +18,21 @@ import org.xml.sax.SAXException;
  */
 public class TestXmlTask {
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException {
-        String pathForReading = "C:\\Users\\Elvira\\Documents\\NetBeansProjects\\starting-monkey-to-human-path\\src\\RPIS41\\Kuzina\\wdad\\learn\\xml\\test3.xml";
-        String pathForWriting = "C:\\Users\\Elvira\\Documents\\NetBeansProjects\\starting-monkey-to-human-path\\src\\RPIS41\\Kuzina\\wdad\\learn\\xml\\test2CHANGED.xml";
+        String pathForReading = ".\\src\\RPIS41\\Kuzina\\wdad\\learn\\xml\\test1.xml";
+        String pathForWriting = ".\\src\\RPIS41\\Kuzina\\wdad\\learn\\xml\\test1CHANGED.xml";
         File fileForReading = new File(pathForReading);
         File fileForWriting = new File(pathForWriting);
         Document document = XMLReader.xmlReader(fileForReading);
         XmlTask testObj = new XmlTask(document);
         
-        User owner = new User("Olga","","");
+        User owner = new User("Olga","");
         testObj.updateNote(owner, "NOTE3", "Olgathebest____CHANGED");   
         XMLWriter.xmlWriter(fileForWriting, document);
         
-        User firstUser = new User("Olga", "ulogola.com", "R");
+        User firstUser = new User("Olga", "ulogola.com");
         testObj.setPrivileges(firstUser, "NOTE4", 3);
         testObj.setPrivileges(firstUser, "NOTE3", 3);        
-        User secondUser = new User("Olga", "olo@mail.ru", "RW");
+        User secondUser = new User("NEWOlga", "olo@mail.ru");
         testObj.setPrivileges(secondUser, "NOTE2", 1);
         XMLWriter.xmlWriter(fileForWriting, document);
     }
