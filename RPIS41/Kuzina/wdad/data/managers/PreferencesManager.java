@@ -9,6 +9,8 @@ import RPIS41.Kuzina.wdad.learn.xml.XMLReader;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -24,6 +26,7 @@ public class PreferencesManager {
 
     private static PreferencesManager instance;
     private Document document;
+    private XPath xPath;
     
     private final String SERVER = "server";
     private final String CLIENT = "client";
@@ -41,6 +44,7 @@ public class PreferencesManager {
     private static final String APPCONFIG_PATH = ".\\src\\RPIS41\\Kuzina\\wdad\\resources\\configuration\\appconfig.xml";
 
     private PreferencesManager(Document document) {
+        this.xPath = XPathFactory.newInstance().newXPath();
         this.document = document;
     }
 
