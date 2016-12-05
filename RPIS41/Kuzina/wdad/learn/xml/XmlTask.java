@@ -138,8 +138,6 @@ public class XmlTask {
                         return;
                     }
                 }
-                Node all = findNodeByName("ALL", privileges).item(0);
-                if(all != null) privileges.removeChild(all);
                 Node userNode = createUserNodeWithRights(user, newRights);
                 if (userNode != null) {
                     privileges.appendChild(userNode);
