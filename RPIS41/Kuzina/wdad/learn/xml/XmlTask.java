@@ -31,113 +31,120 @@ public class XmlTask {
         this.document = document;
     }
 
-    private Node findNodeByName(String name, Node parentNode) {
-        NodeList childs = parentNode.getChildNodes();
-        for (int i = 0; i < childs.getLength(); i++) {
-            if (childs.item(i).getNodeType() == Node.TEXT_NODE) {
-                continue;
-            }
-            if (childs.item(i).getNodeName().equals(name)) {
-                return childs.item(i);
+    private NodeList findNodeByName(String name, Node parentNode) {
+        Element parent = (Element) parentNode;
+        return parent.getElementsByTagName(name);
+    }
+    
+    private NodeList getAllNotes(){
+        return findNodeByName("note", document.getDocumentElement());
+    }
+    
+    private User createUser(Node xmlUser){
+        NamedNodeMap userAttr = xmlUser.getAttributes();
+        Node nameNode = userAttr.getNamedItem("name");
+        String name = (nameNode == null)? "" : nameNode.getFirstChild().getNodeValue();
+        String mail = userAttr.getNamedItem("mail").getFirstChild().getNodeValue();
+        return new User(name, mail);
+    }
+    
+    private Node createUserNodeWithRights(User user, int newRights){
+        Element userNode = document.createElement("user");
+        userNode.setAttribute("name", user.getName());
+        userNode.setAttribute("mail", user.getMail());
+        switch (newRights) {
+            case RIGHT_R:
+                userNode.setAttribute("rights", RIGHT_READ);
+                break;
+            case RIGHT_RW:
+                userNode.setAttribute("rights", RIGHT_READ_WRITE);
+                break;
+            case RIGHT_NO: {
+                return null;
             }
         }
-        return null;
+        return userNode;
     }
 
-    private Node getTextNode(User owner, String title) {
-        NodeList notes = document.getDocumentElement().getChildNodes();//получили список note-ов
-        if (notes.getLength() == 0) {
-            return null;
-        }
+    private Node getNoteByOwnerAndTitle(User owner, String title) {
+        NodeList notes = getAllNotes();
         for (int i = 0; i < notes.getLength(); i++) {
             Node note = notes.item(i);
-            if (note.getNodeType() == Node.TEXT_NODE) {
-                continue;//убираем #text между note-ами
-            }
-            if (!findNodeByName("title", note).getFirstChild().getNodeValue().equals(title)) {
-                continue;
-            }
-            Node xmlOwner = findNodeByName("owner", note);
-            NamedNodeMap ownerAttr = xmlOwner.getAttributes();
-            if (ownerAttr.getNamedItem("name").getFirstChild().getNodeValue().equals(owner.getName())
-                    && ownerAttr.getNamedItem("mail").getFirstChild().getNodeValue().equals(owner.getMail())) {
-                return findNodeByName("text", note);
+            if (((Element)findNodeByName("title", note).item(0)).getTextContent().equals(title)) {
+                Node xmlOwner = findNodeByName("owner", note).item(0);                
+                User notesOwner = createUser(xmlOwner);
+                if(owner.equals(notesOwner)){
+                    return note;
+                }
             }
         }
-        return null;
+        throw new TagNotFoundException();
+    }
+    
+    private boolean textNodeContentIsNull(Node textNode){
+        return textNode.getFirstChild() == null;
+    }
+    
+    private Node getTextNode(Node note){
+        return findNodeByName("text", note).item(0);
     }
 
     public String getNoteText(User owner, String title) throws ParserConfigurationException, SAXException, IOException {
-        Node textNode = getTextNode(owner, title);
-        if (textNode == null || textNode.getFirstChild() == null) {
-            return null;
+        Element textNode = (Element) getTextNode(getNoteByOwnerAndTitle(owner, title));
+        if (textNodeContentIsNull(textNode)) {
+            return "";
         } else {
-            return textNode.getFirstChild().getNodeValue();
+            return textNode.getTextContent();
         }
     }
 
     public void updateNote(User owner, String title, String newText) throws ParserConfigurationException, SAXException, IOException {
-        Node textNode = getTextNode(owner, title);
-        if (textNode == null || textNode.getFirstChild() == null) {
+        Element textNode = (Element) getTextNode(getNoteByOwnerAndTitle(owner, title));
+        if (textNodeContentIsNull(textNode)) {
             return;
         }
-        textNode.getFirstChild().setTextContent(newText);
+        textNode.setTextContent(newText);
     }
 
-    public void setPrivileges(User user, String title, int newRights) throws ParserConfigurationException, SAXException, IOException {
-        NodeList notes = document.getDocumentElement().getChildNodes();//получили список note-ов
-        if (notes.getLength() == 0) {
-            return;
-        }
-        for (int i = 0; i < notes.getLength(); i++) {
-            Node note = notes.item(i);
-            if (note.getNodeType() == Node.TEXT_NODE) {
-                continue;//убираем #text между note-ами
+    private void setNewRights(Node user, int newRights) {
+        Node privileges = user.getParentNode();
+        NamedNodeMap userAttr = user.getAttributes();
+        switch (newRights) {
+            case RIGHT_R:
+                userAttr.getNamedItem("rights").getFirstChild().setNodeValue(RIGHT_READ);
+                break;
+            case RIGHT_RW:
+                userAttr.getNamedItem("rights").getFirstChild().setNodeValue(RIGHT_READ_WRITE);
+                break;
+            case RIGHT_NO: {
+                privileges.removeChild(user);
             }
-            if (!findNodeByName("title", note).getFirstChild().getNodeValue().equals(title)) {
-                continue;
-            }
-            Node privileges = findNodeByName("privileges", note);
-            NodeList usersAll = privileges.getChildNodes();
-            for (int j = 0; j < usersAll.getLength(); j++) {
-                if (!usersAll.item(j).getNodeName().equals("ALL")) {
-                    NamedNodeMap userAttr = usersAll.item(j).getAttributes();
-                    if (userAttr.getNamedItem("name").getFirstChild().getNodeValue().equals(user.getName())
-                            && userAttr.getNamedItem("mail").getFirstChild().getNodeValue().equals(user.getMail())) {
-                        switch (newRights) {
-                            case RIGHT_R:
-                                userAttr.getNamedItem("rights").getFirstChild().setNodeValue(RIGHT_READ);
-                                break;
-                            case RIGHT_RW:
-                                userAttr.getNamedItem("rights").getFirstChild().setNodeValue(RIGHT_READ_WRITE);
-                                break;
-                            case RIGHT_NO: {
-                                privileges.removeChild(usersAll.item(j));
-                            }
-                            break;
-                        }
-                        return;
-                    }
-                } else {
-                    privileges.removeChild(usersAll.item(j));
-                    break;
-                }
-            }
-            Element userNode = document.createElement("user");
-            userNode.setAttribute("name", user.getName());
-            userNode.setAttribute("mail", user.getMail());
-            switch (newRights) {
-                case RIGHT_R:
-                    userNode.setAttribute("rights", RIGHT_READ);
-                    break;
-                case RIGHT_RW:
-                    userNode.setAttribute("rights", RIGHT_READ_WRITE);
-                    break;
-                case RIGHT_NO: {
-                    return;
-                }
-            }
-            privileges.appendChild(userNode);
+            break;
         }
     }
+            
+    public void setPrivileges(User user, String title, int newRights) throws ParserConfigurationException, SAXException, IOException {
+        NodeList notes = getAllNotes();
+        for (int i = 0; i < notes.getLength(); i++) {
+            Node note = notes.item(i);
+            if (((Element)findNodeByName("title", note).item(0)).getTextContent().equals(title)) {
+                Node privileges = findNodeByName("privileges", note).item(0);
+                NodeList users = findNodeByName("user", privileges);
+                for (int j = 0; j < users.getLength(); j++) {
+                    Node currentUser = users.item(j);
+                    User notesUser = createUser(currentUser);
+                    if (user.equals(notesUser)) {
+                        setNewRights(currentUser, newRights);
+                        return;
+                    }
+                }
+                Node userNode = createUserNodeWithRights(user, newRights);
+                if (userNode != null) {
+                    privileges.appendChild(userNode);
+                }
+                return;
+            }
+        }        
+    }
+    
 }

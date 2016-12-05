@@ -18,12 +18,22 @@ import org.xml.sax.SAXException;
  */
 public class TestXmlTask {
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException {
-        String path = "C:\\test3.xml";
-        Document document = XMLReader.xmlReader(new File(path));
+        String pathForReading = ".\\src\\RPIS41\\Kuzina\\wdad\\learn\\xml\\test1.xml";
+        String pathForWriting = ".\\src\\RPIS41\\Kuzina\\wdad\\learn\\xml\\test1CHANGED.xml";
+        File fileForReading = new File(pathForReading);
+        File fileForWriting = new File(pathForWriting);
+        Document document = XMLReader.xmlReader(fileForReading);
         XmlTask testObj = new XmlTask(document);
-        User owner = new User("Olga","","");
-        System.out.println(testObj.getNoteText(owner, "NOTE3"));
-        testObj.updateNote(owner, "NOTE3", "Olgathebest_____!_");
-        System.out.println(testObj.getNoteText(owner, "NOTE3"));
+        
+        User owner = new User("Olga","");
+        testObj.updateNote(owner, "NOTE3", "Olgathebest____CHANGED");   
+        XMLWriter.xmlWriter(fileForWriting, document);
+        
+        User firstUser = new User("Olga", "ulogola.com");
+        testObj.setPrivileges(firstUser, "NOTE4", 3);
+        testObj.setPrivileges(firstUser, "NOTE3", 3);        
+        User secondUser = new User("NEWOlga", "olo@mail.ru");
+        testObj.setPrivileges(secondUser, "NOTE2", 1);
+        XMLWriter.xmlWriter(fileForWriting, document);
     }
 }

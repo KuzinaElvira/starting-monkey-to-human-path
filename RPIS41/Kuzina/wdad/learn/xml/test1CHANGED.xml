@@ -16,23 +16,26 @@
         <owner mail="olol@mail.ru" name="OlgaL"/>		
         <privileges>
             <user mail="olo@mail.ru" name="Olga" rights="RW"/>
-        </privileges>
+        <user mail="olo@mail.ru" name="NEWOlga" rights="R"/>
+</privileges>
         <cdate>29-09-2009</cdate>
     </note>
     <note>
         <title>NOTE3</title>
-        <text>Olgathebest</text>
+        <text>Olgathebest____CHANGED</text>
         <owner mail="" name="Olga"/>		
         <privileges>
             <user mail="olo@mail.ru" rights="RW"/>
-        </privileges>
+        <user mail="ulogola.com" name="Olga" rights="RW"/>
+</privileges>
     </note>
     <note>
         <title>NOTE4</title>
         <text>    </text>
         <owner mail="oloo@mail.ru" name=""/>		
         <privileges>
-            <ALL rights="R"/>
-        </privileges>
+            
+        <user mail="ulogola.com" name="Olga" rights="RW"/>
+</privileges>
     </note>
 </notes>
