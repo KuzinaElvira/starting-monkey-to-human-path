@@ -5,13 +5,14 @@
  */
 package RPIS41.Kuzina.wdad.learn.xml;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author Эльвира
  */
-public class User {
+public class User implements Serializable{
     private String name;
     private String mail;
     static final User ALL = new User("ALL", "");
