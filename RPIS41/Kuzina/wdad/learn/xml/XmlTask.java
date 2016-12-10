@@ -149,8 +149,6 @@ public class XmlTask {
                 }
                 return;
             }
-        }        
-    }
 
     private Note createNote(Node xmlNote) throws ParseException {
         Node xmlOwner = findNodeByName("owner", xmlNote).item(0);
@@ -176,5 +174,7 @@ public class XmlTask {
             }
         }
         return notesByOwner;
+
     }
+    
 }

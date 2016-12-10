@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE notes SYSTEM "C:\Users\Elvira\Documents\NetBeansProjects\starting-monkey-to-human-path\src\RPIS41\Kuzina\wdad\learn\xml\notes.dtd">
+<notes>
+    <note>
+        <title>NOTE1</title>
+        <text>Some text 1...</text>
+        <owner mail="olo@mail.ru" name="Olga"/>
+        <privileges>
+            <ALL rights="RW"/>
+        </privileges>
+        <cdate>09-09-2009</cdate>
+    </note>
+    <note>
+        <title>NOTE2</title>
+        <text>Some text 2...</text>
+        <owner mail="olol@mail.ru" name="OlgaL"/>		
+        <privileges>
+            <user mail="olo@mail.ru" name="Olga" rights="RW"/>
+        <user mail="olo@mail.ru" name="NEWOlga" rights="R"/>
+</privileges>
+        <cdate>29-09-2009</cdate>
+    </note>
+    <note>
+        <title>NOTE3</title>
+        <text>Olgathebest____CHANGED</text>
+        <owner mail="" name="Olga"/>		
+        <privileges>
+            <user mail="olo@mail.ru" rights="RW"/>
+        <user mail="ulogola.com" name="Olga" rights="RW"/>
+</privileges>
+    </note>
+    <note>
+        <title>NOTE4</title>
+        <text>    </text>
+        <owner mail="oloo@mail.ru" name=""/>		
+        <privileges>
+            
+        <user mail="ulogola.com" name="Olga" rights="RW"/>
+</privileges>
+    </note>
+</notes>
