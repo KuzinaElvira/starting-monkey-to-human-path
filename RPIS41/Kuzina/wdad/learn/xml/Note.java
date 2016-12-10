@@ -5,6 +5,8 @@
  */
 package RPIS41.Kuzina.wdad.learn.xml;
 
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -12,7 +14,8 @@ import java.util.HashMap;
  *
  * @author Elvira
  */
-public class Note {
+
+public class Note implements Serializable{
 
     private User owner;
     private String title;

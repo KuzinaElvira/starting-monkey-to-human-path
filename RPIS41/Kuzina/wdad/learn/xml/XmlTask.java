@@ -6,6 +6,11 @@
 package RPIS41.Kuzina.wdad.learn.xml;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -144,7 +149,32 @@ public class XmlTask {
                 }
                 return;
             }
-        }        
+
+    private Note createNote(Node xmlNote) throws ParseException {
+        Node xmlOwner = findNodeByName("owner", xmlNote).item(0);
+        User ownerNote = createUser(xmlOwner);
+        String title = findNodeByName("title", xmlNote).item(0).getFirstChild().getNodeValue();
+        String textString = findNodeByName("text", xmlNote).item(0).getFirstChild().getNodeValue();
+        StringBuilder text = new StringBuilder(textString);
+        SimpleDateFormat formatter = new SimpleDateFormat("DD-MM-YYYY");
+        String date = findNodeByName("cdate", xmlNote).item(0).getFirstChild().getNodeValue();
+        Date cdate = formatter.parse(date);
+        return new Note(ownerNote, title, text, cdate);
+    }
+
+    public List<Note> getNotesByOwner(User owner) throws ParseException {
+        List<Note> notesByOwner = new ArrayList<>();
+        NodeList notes = getAllNotes();
+        for (int i = 0; i < notes.getLength(); i++) {
+            Node note = notes.item(i);
+            Node xmlOwner = findNodeByName("owner", note).item(0);
+            User notesOwner = createUser(xmlOwner);
+            if (owner.equals(notesOwner)) {
+                notesByOwner.add(createNote(note));
+            }
+        }
+        return notesByOwner;
+
     }
     
 }
