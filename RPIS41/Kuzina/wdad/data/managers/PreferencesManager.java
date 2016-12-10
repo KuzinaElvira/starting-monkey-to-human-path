@@ -8,8 +8,12 @@ package RPIS41.Kuzina.wdad.data.managers;
 import RPIS41.Kuzina.wdad.learn.xml.XMLReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -55,7 +59,71 @@ public class PreferencesManager {
         return instance;
     }
     
-    private boolean nodeIsNull(Node node){
+        /*---------------------------3 ЛАБА---------------------------*/
+    
+    private Node getNode(String key) throws XPathExpressionException{
+        key = key.replace('.', '/');
+        XPathExpression expr = xPath.compile(key);
+        return (Node) expr.evaluate(document,XPathConstants.NODE);
+    }
+    
+    public void setProperty(String key, String value) throws XPathExpressionException {
+        getNode(key).setTextContent(value);
+    }
+
+    public String getProperty(String key) throws XPathExpressionException {        
+        return getNode(key).getTextContent();
+    }
+
+    public void setProperties(Properties prop) throws XPathExpressionException {
+        for(Object key : prop.keySet()){
+            String skey = (String) key;
+            setProperty(skey, prop.getProperty(skey));
+        }
+    }
+    
+    private String getNodePath(Node node) {
+        Node parent = node.getParentNode();
+        if (parent == null || parent.getNodeName().equals("#document")) {
+            return node.getNodeName();
+        }
+        return getNodePath(parent) + '.' + node.getNodeName();
+    }
+    
+    public Properties getProperties() throws XPathExpressionException {
+        Properties props = new Properties();
+        String key;
+        NodeList nodeList = (NodeList) xPath.compile("//*[not(*)]").evaluate(document, XPathConstants.NODESET);
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            key = getNodePath(nodeList.item(i));
+            props.put(key, getProperty(key));
+        }
+        return props;
+    }    
+
+    public void addBindedObject(String name, String className) throws XPathExpressionException {
+        Node server = getNode("appconfig.rmi.server");
+        Element bindedObject = document.createElement("bindedobject");
+        bindedObject.setAttribute("name", name);
+        bindedObject.setAttribute("class", className);
+        server.appendChild(bindedObject);
+    }
+
+    public void removeBindedObject(String name) throws XPathExpressionException {
+        Node server = getNode("appconfig.rmi.server");
+        NodeList bindedObjects = server.getChildNodes();
+        for(int i = 0; i < bindedObjects.getLength(); i++){
+            Node bindedObject = bindedObjects.item(i);
+            if(!bindedObject.getNodeName().equals("bindedobject")) continue;
+            if(bindedObject.getAttributes().getNamedItem("name").getNodeValue().equals(name)){
+                server.removeChild(bindedObject);
+            }
+        }
+    }
+
+    /*---------------------------3 ЛАБА---------------------------*/
+    
+   private boolean nodeIsNull(Node node){
         return node == null;
     }
 

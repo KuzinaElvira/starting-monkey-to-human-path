@@ -4,10 +4,8 @@
  * and open the template in the editor.
  */
 package RPIS41.Kuzina.wdad.learn.xml;
-//
-//import org.w3c.dom.Document;
-//import org.w3c.dom.NamedNodeMap;
-//import org.w3c.dom.NodeList;
+
+import java.util.Objects;
 
 /**
  *
@@ -16,17 +14,11 @@ package RPIS41.Kuzina.wdad.learn.xml;
 public class User {
     private String name;
     private String mail;
-    private String rights;
-    public static final String NO_RIGHTS = "";
-    public static final String RIGHTS_R = "R";
-    public static final String RIGHTS_RW = "RW";
+    static final User ALL = new User("ALL", "");
     
-    public User(String name, String mail, String rights){
+    public User(String name, String mail){
         this.name = name;
         this.mail = mail;
-        if(rights.equals(""))
-            rights = RIGHTS_R;
-        else this.rights = rights;
     }    
     
     public void setName(String name){
@@ -36,10 +28,6 @@ public class User {
     public void setMail(String mail){
         this.mail = mail;
     }
-        
-    public void setRights(String rights){
-        this.rights = rights;
-    }
     
     public String getName(){
         return name;
@@ -48,8 +36,34 @@ public class User {
     public String getMail(){
         return mail;
     }
-    
-    public String getRights(){
-        return rights;
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 47 * hash + Objects.hashCode(this.name);
+        hash = 47 * hash + Objects.hashCode(this.mail);
+        return hash;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.mail, other.mail)) {
+            return false;
+        }
+        return true;
+    }
+    
 }
